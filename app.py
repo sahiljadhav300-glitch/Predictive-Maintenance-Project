@@ -88,15 +88,26 @@ if st.button("Predict Failure Type"):
     # Display result
     st.subheader("Prediction Result")
 
-    st.success(f"Predicted Failure Type: {prediction[0]}")
+    failure_names = {
+    "TWF": "Tool Wear Failure",
+    "HDF": "Heat Dissipation Failure",
+    "PWF": "Power Failure",
+    "OSF": "Overstrain Failure",
+    "RNF": "Random Failure",
+    "No Failure": "No Machine Failure"
+}
+
+predicted_failure = failure_names[prediction[0]]
+
+st.success(f"Predicted Failure Type: {predicted_failure}")
 
     # Display prediction probabilities
     probabilities = model.predict_proba(new_machine)[0]
 
-    probability_df = pd.DataFrame({
-        "Failure Type": model.classes_,
-        "Probability": probabilities * 100
-    })
+  probability_df = pd.DataFrame({
+    "Failure Type": [failure_names[x] for x in model.classes_],
+    "Probability": probabilities * 100
+})
 
     probability_df["Probability"] = probability_df["Probability"].round(2)
 
